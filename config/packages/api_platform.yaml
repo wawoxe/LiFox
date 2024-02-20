@@ -22,7 +22,7 @@ api_platform:
         html: ['text/html']
 
     ## Enable Swagger UI.
-    enable_swagger_ui: false
+    enable_swagger_ui: true
 
     ## Enable ReDoc.
     enable_re_doc: true
