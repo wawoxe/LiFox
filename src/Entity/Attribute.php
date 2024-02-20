@@ -31,9 +31,9 @@ final class Attribute
         #[ORM\Column(length: 255)]
         public ?string $className = null,
         #[ORM\Column]
-        public bool $isRequired = false,
+        public ?bool $isRequired = null,
         #[ORM\Column]
-        public bool $isUnique = false,
+        public ?bool $isUnique = null,
     ) {
     }
 }
