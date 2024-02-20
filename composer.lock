@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "77f781e94f86d691adb791db71902e01",
+    "content-hash": "f3ebfb09c605422d2d6f30f8d244995a",
     "packages": [
         {
             "name": "doctrine/cache",
@@ -3860,6 +3860,54 @@
                 }
             ],
             "time": "2024-01-23T15:02:46+00:00"
+        },
+        {
+            "name": "wawoxe/maintenance-bundle",
+            "version": "v1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/wawoxe/MaintenanceBundle.git",
+                "reference": "de4c26ed146ee4d1e01159aae60758eb6cd163a0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/wawoxe/MaintenanceBundle/zipball/de4c26ed146ee4d1e01159aae60758eb6cd163a0",
+                "reference": "de4c26ed146ee4d1e01159aae60758eb6cd163a0",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">= 8.3",
+                "symfony/http-kernel": ">=7.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^11",
+                "symfony/config": ">=7.0",
+                "symfony/dependency-injection": ">=7.0",
+                "symfony/yaml": ">=7.0"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-4": {
+                    "Wawoxe\\MaintenanceBundle\\": "src/",
+                    "Wawoxe\\MaintenanceBundle\\Test\\": "tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mykyta Melnyk",
+                    "email": "wawoxe@proton.me"
+                }
+            ],
+            "description": "Maintenance mode feature for Symfony application.",
+            "support": {
+                "issues": "https://github.com/wawoxe/MaintenanceBundle/issues",
+                "source": "https://github.com/wawoxe/MaintenanceBundle/tree/v1.0.1"
+            },
+            "time": "2024-02-15T16:20:26+00:00"
         }
     ],
     "packages-dev": [
