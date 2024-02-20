@@ -16,7 +16,7 @@ use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: TransactionRepository::class)]
-class Transaction
+final class Transaction
 {
     public function __construct(
         #[ORM\Id]
