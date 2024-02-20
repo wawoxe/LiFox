@@ -16,7 +16,7 @@ use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: AttributeRepository::class)]
-class Attribute
+final class Attribute
 {
     public function __construct(
         #[ORM\Id]
@@ -28,6 +28,12 @@ class Attribute
         public ?string $name = null,
         #[ORM\Column(length: 255)]
         public ?string $type = null,
+        #[ORM\Column(length: 255)]
+        public ?string $className = null,
+        #[ORM\Column]
+        public bool $isRequired = false,
+        #[ORM\Column]
+        public bool $isUnique = false,
     ) {
     }
 }
