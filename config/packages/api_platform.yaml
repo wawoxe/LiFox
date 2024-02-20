@@ -1,0 +1,70 @@
+api_platform:
+    # The title of the API.
+    title: 'LifeW'
+
+    # The description of the API.
+    description: 'Personal dashboard API'
+
+    # The version of the API.
+    version: 0.0.x
+
+    # Set this to false if you want Webby to disappear.
+    show_webby: false
+
+    # The list of enabled formats. First is default.
+    formats:
+        jsonld: ['application/ld+json']
+
+    # Swagger UI
+    ## The list of enabled formats.
+    docs_formats:
+        jsonld: ['application/ld+json']
+        html: ['text/html']
+
+    ## Enable Swagger UI.
+    enable_swagger_ui: false
+
+    ## Enable ReDoc.
+    enable_re_doc: true
+
+    swagger:
+        # The active versions of OpenAPI to be exported or used in the swagger_ui. The first value is the default.
+        versions: [3]
+
+    # Enable the data collector and the WebProfilerBundle integration.
+    enable_profiler: false
+
+    # Collection configuration
+    collection:
+        # The name of the query parameter to filter nullable results (with the ExistsFilter).
+        exists_parameter_name: 'exists'
+
+        # The default order of results.
+        order: 'DESC'
+
+        # The name of the query parameter to order results (with the OrderFilter).
+        order_parameter_name: 'order'
+
+        # Pagination configuration
+        pagination:
+            # The default name of the parameter handling the page number.
+            page_parameter_name: 'page'
+
+            # The name of the query parameter to enable or disable pagination.
+            enabled_parameter_name: 'pagination'
+
+            # The name of the query parameter to set the number of items per page.
+            items_per_page_parameter_name: 'itemsPerPage'
+
+            # The name of the query parameter to enable or disable the partial pagination.
+            partial_parameter_name: 'partial'
+    defaults:
+        stateless: true
+        cache_headers:
+            vary: ['Content-Type', 'Authorization', 'Origin']
+        extra_properties:
+            standard_put: true
+            rfc_7807_compliant_errors: true
+        url_generation_strategy: !php/const ApiPlatform\Api\UrlGeneratorInterface::ABS_URL
+    event_listeners_backward_compatibility_layer: false
+    keep_legacy_inflector: false
