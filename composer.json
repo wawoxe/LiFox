@@ -17,6 +17,7 @@
         "symfony/flex": "^2",
         "symfony/framework-bundle": "7.0.*",
         "symfony/runtime": "7.0.*",
+        "symfony/uid": "7.0.*",
         "symfony/yaml": "7.0.*"
     },
     "require-dev": {
@@ -75,13 +76,11 @@
         "post-update-cmd": [
             "@auto-scripts"
         ],
-        "phpcs:fix": "tools/php-cs-fixer/vendor/bin/php-cs-fixer fix src",
-        "phpcs:test:fix": "tools/php-cs-fixer/vendor/bin/php-cs-fixer fix tests",
+        "phpcs:fix": "tools/php-cs-fixer/vendor/bin/php-cs-fixer fix --config=tools/php-cs-fixer/.php-cs-fixer.dist.php",
         "phpstan:analyse": "tools/phpstan/vendor/bin/phpstan analyse -c tools/phpstan/phpstan.neon",
         "phpmd:analyse": "tools/phpmd/vendor/bin/phpmd src tests ansi tools/phpmd/rulesets.xml --strict",
         "code:analyse": [
             "@phpcs:fix",
-            "@phpcs:test:fix",
             "@phpstan:analyse",
             "@phpmd:analyse"
         ],
