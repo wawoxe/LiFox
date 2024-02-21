@@ -20,15 +20,12 @@ use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: AttributeRepository::class)]
-#[ApiResource(operations: [new GetCollection()])]
+#[ApiResource(operations: [new GetCollection])]
 class Category
 {
     /**
-     * @var Collection<int, Category> $children
+     * @param Collection<int, Category> $children
      */
-    #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'parent', cascade: ['persist'], orphanRemoval: true)]
-    public Collection $children;
-
     public function __construct(
         #[ORM\Id]
         #[ORM\Column(type: UuidType::NAME, unique: true)]
@@ -41,6 +38,8 @@ class Category
         public ?string $type,
         #[ORM\Column(length: 255)]
         public ?string $className,
+        #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'parent', cascade: ['persist'], orphanRemoval: true)]
+        public Collection $children,
         #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'children')]
         public ?self $parent,
     ) {
