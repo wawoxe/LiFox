@@ -37,7 +37,7 @@ class Category
         public ?string $type,
         #[ORM\Column(length: 255)]
         public ?string $className,
-        #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'parent', cascade: ['persist'], orphanRemoval: true)]
+        #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'parent')]
         public Collection $children,
         #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'children')]
         public ?self $parent,
