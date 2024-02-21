@@ -18,57 +18,19 @@ api_platform:
     # Enable the data collector and the WebProfilerBundle integration.
     enable_profiler: false
 
-    # Collection configuration
-    collection:
-        # The name of the query parameter to filter nullable results (with the ExistsFilter).
-        exists_parameter_name: 'exists'
-
-        # The default order of results.
-        order: 'DESC'
-
-        # The name of the query parameter to order results (with the OrderFilter).
-        order_parameter_name: 'order'
-
-        # Pagination configuration
-        pagination:
-            # The default name of the parameter handling the page number.
-            page_parameter_name: 'page'
-
-            # The name of the query parameter to enable or disable pagination.
-            enabled_parameter_name: 'pagination'
-
-            # The name of the query parameter to set the number of items per page.
-            items_per_page_parameter_name: 'itemsPerPage'
-
-            # The name of the query parameter to enable or disable the partial pagination.
-            partial_parameter_name: 'partial'
-
-    defaults:
-        stateless: true
-        cache_headers:
-            vary: ['Content-Type', 'Authorization', 'Origin']
-        extra_properties:
-            standard_put: true
-            rfc_7807_compliant_errors: true
-
-    event_listeners_backward_compatibility_layer: false
-    keep_legacy_inflector: false
-    enable_entrypoint: true
+    # Enable entrypoint
+    enable_entrypoint: false
 
     # Enable docs
-    enable_docs: true
+    enable_docs: false
 
-    # The list of enabled formats.
-    docs_formats:
-        jsonld: [ 'application/ld+json' ]
-
-    ## Disable Swagger UI.
+    # Disable Swagger UI.
     enable_swagger_ui: false
 
-    ## Disable ReDoc.
+    # Disable ReDoc.
     enable_re_doc: false
 
-when@prod:
-    api_platform:
-        enable_entrypoint: false
-        enable_docs: false
+    # GraphQL
+    graphql:
+        # Disable IDE
+        default_ide: false
