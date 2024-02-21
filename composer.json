@@ -31,7 +31,8 @@
         "symfony/uid": "7.0.*",
         "symfony/validator": "7.0.*",
         "symfony/yaml": "7.0.*",
-        "wawoxe/maintenance-bundle": "^1.0"
+        "wawoxe/maintenance-bundle": "^1.0",
+        "webonyx/graphql-php": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5",
