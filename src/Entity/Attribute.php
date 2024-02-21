@@ -18,7 +18,7 @@ use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: AttributeRepository::class)]
-#[ApiResource(operations: [new GetCollection()])]
+#[ApiResource(operations: [new GetCollection])]
 class Attribute
 {
     public function __construct(

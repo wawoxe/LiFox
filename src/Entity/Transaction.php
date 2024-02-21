@@ -18,7 +18,7 @@ use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: TransactionRepository::class)]
-#[ApiResource(operations: [new GetCollection()])]
+#[ApiResource(operations: [new GetCollection])]
 class Transaction
 {
     public function __construct(
