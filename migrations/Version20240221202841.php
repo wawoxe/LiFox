@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20240220200111 extends AbstractMigration
+final class Version20240221202841 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -20,10 +20,12 @@ final class Version20240220200111 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('CREATE TABLE category (id UUID NOT NULL, parent_id UUID DEFAULT NULL, name VARCHAR(255) NOT NULL, type VARCHAR(255) NOT NULL, class_name VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE category (id UUID NOT NULL, parent_id UUID DEFAULT NULL, name VARCHAR(255) NOT NULL, type VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_64C19C1727ACA70 ON category (parent_id)');
         $this->addSql('COMMENT ON COLUMN category.id IS \'(DC2Type:uuid)\'');
         $this->addSql('COMMENT ON COLUMN category.parent_id IS \'(DC2Type:uuid)\'');
+        $this->addSql('CREATE TABLE transaction (id UUID NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('COMMENT ON COLUMN transaction.id IS \'(DC2Type:uuid)\'');
         $this->addSql('ALTER TABLE category ADD CONSTRAINT FK_64C19C1727ACA70 FOREIGN KEY (parent_id) REFERENCES category (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
     }
 
@@ -33,5 +35,6 @@ final class Version20240220200111 extends AbstractMigration
         $this->addSql('CREATE SCHEMA public');
         $this->addSql('ALTER TABLE category DROP CONSTRAINT FK_64C19C1727ACA70');
         $this->addSql('DROP TABLE category');
+        $this->addSql('DROP TABLE transaction');
     }
 }

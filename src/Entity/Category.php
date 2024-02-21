@@ -35,12 +35,10 @@ class Category
         public ?string $name,
         #[ORM\Column(length: 255)]
         public ?string $type,
-        #[ORM\Column(length: 255)]
-        public ?string $className,
         #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'parent')]
         public Collection $children,
         #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'children')]
-        public ?self $parent,
+        public ?self $parent = null,
     ) {
         $this->children = new ArrayCollection;
     }
