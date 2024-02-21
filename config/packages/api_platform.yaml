@@ -15,22 +15,6 @@ api_platform:
     formats:
         jsonld: ['application/ld+json']
 
-    # Swagger UI
-    ## The list of enabled formats.
-    docs_formats:
-        jsonld: ['application/ld+json']
-        html: ['text/html']
-
-    ## Enable Swagger UI.
-    enable_swagger_ui: true
-
-    ## Enable ReDoc.
-    enable_re_doc: true
-
-    swagger:
-        # The active versions of OpenAPI to be exported or used in the swagger_ui. The first value is the default.
-        versions: [3]
-
     # Enable the data collector and the WebProfilerBundle integration.
     enable_profiler: false
 
@@ -58,6 +42,7 @@ api_platform:
 
             # The name of the query parameter to enable or disable the partial pagination.
             partial_parameter_name: 'partial'
+
     defaults:
         stateless: true
         cache_headers:
@@ -65,6 +50,25 @@ api_platform:
         extra_properties:
             standard_put: true
             rfc_7807_compliant_errors: true
-        url_generation_strategy: !php/const ApiPlatform\Api\UrlGeneratorInterface::ABS_URL
+
     event_listeners_backward_compatibility_layer: false
     keep_legacy_inflector: false
+    enable_entrypoint: true
+
+    # Enable docs
+    enable_docs: true
+
+    # The list of enabled formats.
+    docs_formats:
+        jsonld: [ 'application/ld+json' ]
+
+    ## Disable Swagger UI.
+    enable_swagger_ui: false
+
+    ## Disable ReDoc.
+    enable_re_doc: false
+
+when@prod:
+    api_platform:
+        enable_entrypoint: false
+        enable_docs: false
