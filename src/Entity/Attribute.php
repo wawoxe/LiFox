@@ -19,7 +19,7 @@ use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: AttributeRepository::class)]
 #[ApiResource(operations: [new GetCollection()])]
-final class Attribute
+class Attribute
 {
     public function __construct(
         #[ORM\Id]

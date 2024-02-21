@@ -19,7 +19,7 @@ use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: TransactionRepository::class)]
 #[ApiResource(operations: [new GetCollection()])]
-final class Transaction
+class Transaction
 {
     public function __construct(
         #[ORM\Id]

@@ -21,7 +21,7 @@ use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: AttributeRepository::class)]
 #[ApiResource(operations: [new GetCollection()])]
-final class Category
+class Category
 {
     /**
      * @var Collection<int, Category> $children
