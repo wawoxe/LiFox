@@ -31,8 +31,8 @@ use Symfony\Component\Uid\Uuid;
             normalizationContext: ['groups' => ['query_collection']],
             denormalizationContext: ['groups' => ['mutation']],
             name: 'create',
-        )
-    ]
+        ),
+    ],
 )]
 class Transaction
 {
