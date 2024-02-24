@@ -1,9 +1,9 @@
 api_platform:
     # The title of the API.
-    title: 'LifeW'
+    title: 'LiFox'
 
     # The description of the API.
-    description: 'Personal dashboard API'
+    description: 'Unlock productivity with our Symfony API application—a versatile toolbox for managing goals, notes, contacts, and more. Dive into comprehensive documentation to get started, explore advanced features, and streamline your daily tasks effortlessly.'
 
     # The version of the API.
     version: 0.0.x
@@ -14,23 +14,38 @@ api_platform:
     # The list of enabled formats. First is default.
     formats:
         jsonld: ['application/ld+json']
+        json: ['application/json']
 
     # Enable the data collector and the WebProfilerBundle integration.
-    enable_profiler: false
+    enable_profiler: true
 
     # Enable entrypoint
-    enable_entrypoint: false
+    enable_entrypoint: true
 
     # Enable docs
-    enable_docs: false
+    enable_docs: true
+    enable_swagger_ui: true
+    enable_re_doc: true
 
-    # Disable Swagger UI.
-    enable_swagger_ui: false
-
-    # Disable ReDoc.
-    enable_re_doc: false
-
-    # GraphQL
+    # GraphQL configuration
     graphql:
-        # Disable IDE
-        default_ide: false
+        enabled: true
+
+        # The default IDE (graphiql or graphql-playground) used when going to the GraphQL endpoint. False to disable.
+        default_ide: 'graphiql'
+
+        graphiql:
+            enabled: true
+
+        graphql_playground:
+            # Disable (deprecated)
+            enabled: false
+
+        collection:
+            pagination:
+                enabled: true
+
+when@prod:
+    api_platform:
+        # Disable profiler for production
+        enable_profiler: false
