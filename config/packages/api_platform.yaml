@@ -27,6 +27,10 @@ api_platform:
     enable_swagger_ui: true
     enable_re_doc: true
 
+    # The list of enabled docs formats.
+    docs_formats:
+        jsonld: ['application/ld+json']
+
     # GraphQL configuration
     graphql:
         enabled: true
