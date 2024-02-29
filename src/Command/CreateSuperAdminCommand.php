@@ -27,7 +27,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
     name: 'app:create:super-admin',
     description: 'Creates a super admin in the application database.',
 )]
-final class SuperAdminCommand extends Command
+final class CreateSuperAdminCommand extends Command
 {
     public function __construct(
         private readonly EntityManagerInterface $manager,
