@@ -30,8 +30,7 @@ security:
 
     role_hierarchy:
         ROLE_DEVELOPER: ROLE_USER
-        ROLE_ADMIN: ROLE_USER
-        ROLE_SUPER_ADMIN: [ROLE_DEVELOPER, ROLE_ADMIN]
+        ROLE_SUPER_ADMIN: ROLE_DEVELOPER
 
 when@prod:
     security:
