@@ -12,11 +12,6 @@ namespace App\Entity\Security;
 
 use function array_unique;
 
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\GraphQl\DeleteMutation;
-use ApiPlatform\Metadata\GraphQl\Mutation;
-use ApiPlatform\Metadata\GraphQl\Query;
-use ApiPlatform\Metadata\GraphQl\QueryCollection;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
@@ -34,36 +29,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-#[ApiResource(
-    operations: [],
-    graphQlOperations: [
-        new Query(
-            normalizationContext: ['groups' => 'query'],
-            security: 'is_granted("ROLE_SUPER_ADMIN") or is_granted("USER_QUERY")',
-        ),
-        new QueryCollection(
-            normalizationContext: ['groups' => 'query_collection'],
-            security: 'is_granted("ROLE_SUPER_ADMIN") or is_granted("USER_QUERY_COLLECTION")',
-        ),
-        new Mutation(
-            normalizationContext: ['groups' => 'query_collection'],
-            denormalizationContext: ['groups' => 'create'],
-            security: 'is_granted("ROLE_SUPER_ADMIN") or is_granted("USER_MUTATION_CREATE")',
-            name: 'create',
-        ),
-        new Mutation(
-            normalizationContext: ['groups' => 'query_collection'],
-            denormalizationContext: ['groups' => 'update'],
-            security: 'is_granted("ROLE_SUPER_ADMIN") or is_granted("USER_MUTATION_UPDATE")',
-            name: 'update',
-        ),
-        new DeleteMutation(
-            normalizationContext: ['groups' => 'query_collection'],
-            security: 'is_granted("ROLE_SUPER_ADMIN") or is_granted("USER_MUTATION_DELETE")',
-            name: 'delete',
-        ),
-    ],
-)]
 #[UniqueEntity(
     fields: ['email'],
     message: 'validation.user.email.exists',
