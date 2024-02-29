@@ -8,24 +8,20 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace App\Entity;
+namespace App\Entity\Security;
 
 use function array_unique;
 
 use ApiPlatform\Metadata\ApiResource;
-
 use ApiPlatform\Metadata\GraphQl\DeleteMutation;
-
 use ApiPlatform\Metadata\GraphQl\Mutation;
 use ApiPlatform\Metadata\GraphQl\Query;
 use ApiPlatform\Metadata\GraphQl\QueryCollection;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
-
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
@@ -41,25 +37,37 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(
     operations: [],
     graphQlOperations: [
-        new Query(normalizationContext: ['groups' => 'query']),
-        new QueryCollection(normalizationContext: ['groups' => 'query_collection']),
+        new Query(
+            normalizationContext: ['groups' => 'query'],
+            security: 'is_granted("ROLE_SUPER_ADMIN") or is_granted("USER_QUERY")',
+        ),
+        new QueryCollection(
+            normalizationContext: ['groups' => 'query_collection'],
+            security: 'is_granted("ROLE_SUPER_ADMIN") or is_granted("USER_QUERY_COLLECTION")',
+        ),
         new Mutation(
             normalizationContext: ['groups' => 'query_collection'],
             denormalizationContext: ['groups' => 'create'],
+            security: 'is_granted("ROLE_SUPER_ADMIN") or is_granted("USER_MUTATION_CREATE")',
             name: 'create',
         ),
         new Mutation(
             normalizationContext: ['groups' => 'query_collection'],
             denormalizationContext: ['groups' => 'update'],
+            security: 'is_granted("ROLE_SUPER_ADMIN") or is_granted("USER_MUTATION_UPDATE")',
             name: 'update',
         ),
         new DeleteMutation(
             normalizationContext: ['groups' => 'query_collection'],
+            security: 'is_granted("ROLE_SUPER_ADMIN") or is_granted("USER_MUTATION_DELETE")',
             name: 'delete',
         ),
     ],
 )]
-#[UniqueEntity(fields: ['email'])]
+#[UniqueEntity(
+    fields: ['email'],
+    message: 'validation.user.email.exists',
+)]
 class User implements PasswordAuthenticatedUserInterface, UserInterface
 {
     /**
@@ -79,8 +87,12 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
         public ?Uuid $id = null,
         #[
             ORM\Column(length: 180, unique: true),
-            Assert\NotBlank,
-            Assert\Email,
+            Assert\NotBlank(
+                message: 'validation.user.email.blank',
+            ),
+            Assert\Email(
+                message: 'validation.user.email.invalid',
+            ),
             Groups(['query', 'query_collection', 'create', 'update']),
         ]
         public ?string $email = null,
@@ -92,6 +104,10 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
         #[
             ORM\Column,
             Assert\NotBlank,
+            Assert\Regex(
+                pattern: '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,80}$/',
+                message: 'validation.user.password.regex',
+            ),
             Groups(['create', 'update']),
         ]
         public ?string $password = null,
