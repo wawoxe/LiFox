@@ -20,12 +20,6 @@ and more.
 - [ ] **Price Monitoring:** Monitor prices for particular products and track expenses.
 - [ ] **Job:** Monitor work hours, after-hours, and holiday entitlement.
 
-### ~~File Management~~
-
-- [ ] ~~**Images:** Organize photos and multimedia in customizable galleries.~~
-- [ ] ~~**Files:** Manage files easily with a user-friendly interface.~~
-- [ ] ~~**Video:** Store and view videos with support for popular formats.~~
-
 ## Installation
 
 ### Clone the repository
