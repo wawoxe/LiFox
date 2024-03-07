@@ -12,13 +12,12 @@ namespace App\Entity\Security;
 
 use function array_unique;
 
-use App\Repository\UserRepository;
+use App\Repository\Security\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -47,33 +46,23 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
             ORM\Column(type: UuidType::NAME, unique: true),
             ORM\GeneratedValue(strategy: 'CUSTOM'),
             ORM\CustomIdGenerator(class: 'doctrine.uuid_generator'),
-            Groups(['query', 'query_collection'])
         ]
         public ?Uuid $id = null,
         #[
             ORM\Column(length: 180, unique: true),
-            Assert\NotBlank(
-                message: 'validation.user.email.blank',
-            ),
-            Assert\Email(
-                message: 'validation.user.email.invalid',
-            ),
-            Groups(['query', 'query_collection', 'create', 'update']),
+            Assert\NotBlank(message: 'validation.user.email.blank'),
+            Assert\Email(message: 'validation.user.email.invalid'),
         ]
         public ?string $email = null,
-        #[
-            ORM\Column,
-            Groups(['query', 'query_collection', 'create', 'update'])
-        ]
+        #[ORM\Column]
         public array $roles = [],
         #[
             ORM\Column,
-            Assert\NotBlank,
+            Assert\NotBlank(message: 'validation.user.password.blank'),
             Assert\Regex(
                 pattern: '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,80}$/',
                 message: 'validation.user.password.regex',
             ),
-            Groups(['create', 'update']),
         ]
         public ?string $password = null,
     ) {
