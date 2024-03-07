@@ -48,6 +48,13 @@ php bin/console doctrine:database:create
 php bin/console doctrine:migrations:migrate
 ```
 
+### Run installation commands
+
+```shell
+# Replace <email> with email and <password> with password.
+php bin/console app:install:create:super-admin <email> <password>
+```
+
 ### Start the development server
 
 ```shell

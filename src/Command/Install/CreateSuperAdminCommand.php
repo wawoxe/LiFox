@@ -8,9 +8,7 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace App\Command;
-
-use function is_string;
+namespace App\Command\Install;
 
 use App\Entity\Security\User;
 use Doctrine\ORM\EntityManagerInterface;
@@ -22,9 +20,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use function is_string;
 
 #[AsCommand(
-    name: 'app:create:super-admin',
+    name: 'app:install:create:super-admin',
     description: 'Creates a super admin in the application database.',
 )]
 final class CreateSuperAdminCommand extends Command
