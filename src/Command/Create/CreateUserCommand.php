@@ -8,7 +8,9 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace App\Command\Install;
+namespace App\Command\Create;
+
+use function is_string;
 
 use App\Entity\Security\User;
 use Doctrine\ORM\EntityManagerInterface;
@@ -20,13 +22,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use function is_string;
 
 #[AsCommand(
-    name: 'app:install:create:super-admin',
+    name: 'app:create:user',
     description: 'Creates a super admin in the application database.',
 )]
-final class CreateSuperAdminCommand extends Command
+final class CreateUserCommand extends Command
 {
     public function __construct(
         private readonly EntityManagerInterface $manager,
@@ -52,7 +53,7 @@ final class CreateSuperAdminCommand extends Command
         if (is_string($email) && is_string($password)) {
             $superAdminEntity = new User(
                 email: $email,
-                roles: ['ROLE_SUPER_ADMIN'],
+                roles: ['ROLE_USER'],
             );
 
             $superAdminEntity->password = $password;
