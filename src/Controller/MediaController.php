@@ -12,12 +12,12 @@ namespace App\Controller;
 
 use function is_iterable;
 use function is_string;
-
 use function sprintf;
 
 use function str_replace;
 
 use App\Entity\Basic\Media;
+
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -26,6 +26,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[Route(
@@ -46,6 +47,7 @@ final class MediaController extends AbstractController
         name: 'create',
         methods: [Request::METHOD_POST],
     )]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function create(Request $request): Response
     {
         $uploadedFiles = $request->files->get('files');
@@ -114,6 +116,10 @@ final class MediaController extends AbstractController
         $media = $this->manager->getRepository(Media::class)->findOneBy(['id' => $id]);
 
         if ($media instanceof Media) {
+            if (false === $media->public && false === $this->isGranted('IS_AUTHENTICATED_FULLY')) {
+                return $this->json(['message' => 'response.media.forbidden'], Response::HTTP_FORBIDDEN);
+            }
+
             return $this->file(
                 sprintf(
                     '%s%s.%s',
