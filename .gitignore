@@ -24,3 +24,7 @@
 /.php-cs-fixer.cache
 /.phpunit.result.cache
 ###< wawoxe/lifew ###
+
+###> lexik/jwt-authentication-bundle ###
+/config/jwt/*.pem
+###< lexik/jwt-authentication-bundle ###
