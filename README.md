@@ -31,9 +31,9 @@ git clone git@github.com:wawoxe/lifox.git
 ### Install composer dependencies
 
 ```shell
-# For production
-composer install
 # For development
+composer install
+# For production
 composer install --no-dev --optimize-autoloader
 ```
 
