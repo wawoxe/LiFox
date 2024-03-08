@@ -16,12 +16,13 @@
         "symfony/dotenv": "7.0.*",
         "symfony/flex": "^2",
         "symfony/framework-bundle": "7.0.*",
+        "symfony/mime": "7.0.*",
         "symfony/runtime": "7.0.*",
-        "symfony/uid": "7.0.*",
-        "symfony/yaml": "7.0.*",
-        "symfony/validator": "7.0.*",
         "symfony/security-bundle": "7.0.*",
         "symfony/serializer": "7.0.*",
+        "symfony/uid": "7.0.*",
+        "symfony/validator": "7.0.*",
+        "symfony/yaml": "7.0.*",
         "wawoxe/maintenance-bundle": "^1.0"
     },
     "require-dev": {

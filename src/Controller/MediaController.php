@@ -98,9 +98,33 @@ final class MediaController extends AbstractController
                 }
             }
 
-            return $this->json(['message' => 'response.media.created']);
+            return $this->json(['message' => 'response.media.created'], Response::HTTP_OK);
         }
 
         return $this->json(['message' => 'response.media.empty'], Response::HTTP_BAD_REQUEST);
+    }
+
+    #[Route(
+        path: '/file/{id}',
+        name: 'get_file',
+        methods: [Request::METHOD_GET],
+    )]
+    public function getFile(string $id): Response
+    {
+        $media = $this->manager->getRepository(Media::class)->findOneBy(['id' => $id]);
+
+        if ($media instanceof Media) {
+            return $this->file(
+                sprintf(
+                    '%s%s.%s',
+                    $media->uploadDir,
+                    $media->id,
+                    $media->extension,
+                ),
+                sprintf('%s.%s', $media->originalName, $media->extension),
+            );
+        }
+
+        return $this->json(['message' => 'response.media.not_found'], Response::HTTP_NOT_FOUND);
     }
 }
