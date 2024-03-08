@@ -28,18 +28,37 @@ and more.
 git clone git@github.com:wawoxe/lifox.git
 ```
 
-### Install dependencies
+### Install composer dependencies
 
 ```shell
+# For production
 composer install
+# For development
+composer install --no-dev --optimize-autoloader
 ```
 
 ### Configure environment variables
 
 ```shell
-cp .env.example .env
+# Copy .env example to local
+cp .env .env.local
+# Use your editor for env configuration
+nano .env.local
+```
+
+### Create the database and migrate Doctrine migrations
+
+```shell
+# Create database
 php bin/console doctrine:database:create
+# Migrate Doctrine migrations
 php bin/console doctrine:migrations:migrate
+```
+
+### Generate the SSL keys
+
+```shell
+php bin/console lexik:jwt:generate-keypair
 ```
 
 ### Run installation commands
@@ -52,10 +71,12 @@ php bin/console app:install:create:super-admin <email> <password>
 ### Start the development server
 
 ```shell
+# Don't use this on production server
+# For production server set up Nginx / Apache / Caddy
 symfony serve
 ```
 
-Visit https://localhost:8000 in your web browser to access the application.
+Visit https://localhost:8000 (only dev) in your web browser to access the application.
 
 ## Contributing
 
