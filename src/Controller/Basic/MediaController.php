@@ -8,13 +8,12 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace App\Controller;
+namespace App\Controller\Basic;
 
 use function is_iterable;
 use function sprintf;
 
 use App\Entity\Basic\Media;
-
 use App\Service\Media\MediaService;
 use App\Service\Media\TransformedMedia;
 use App\Service\Media\Transformer\UploadedFileTransformer;
@@ -30,8 +29,8 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[Route(
-    path: '/media',
-    name: 'app_media_',
+    path: '/basic/media',
+    name: 'app_basic_media_',
 )]
 final class MediaController extends AbstractController
 {
