@@ -11,17 +11,16 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use function is_iterable;
-use function is_string;
 use function sprintf;
 
-use function str_replace;
-
 use App\Entity\Basic\Media;
-
+use App\Service\Media\MediaService;
+use App\Service\Media\Transformer\UploadedFileTransformer;
+use App\Service\Media\Validation\DefaultMediaValidator;
+use App\Service\Media\Writer\UploadedFileWriter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -35,11 +34,18 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 )]
 final class MediaController extends AbstractController
 {
+    private readonly MediaService $mediaService;
+
     public function __construct(
         private readonly ParameterBagInterface $parameterBag,
         private readonly EntityManagerInterface $manager,
         private readonly ValidatorInterface $validator,
     ) {
+        $this->mediaService = new MediaService(
+            new UploadedFileTransformer($this->parameterBag),
+            new UploadedFileWriter,
+            new DefaultMediaValidator($this->validator),
+        );
     }
 
     #[Route(
@@ -53,52 +59,32 @@ final class MediaController extends AbstractController
         $this->denyAccessUnlessGranted($this->parameterBag->get('media.create.allowed_role'));
 
         $uploadedFiles = $request->files->get('files');
-        $uploadDir     = $this->parameterBag->get('media.upload_dir');
 
         if (
             $request->files->count() &&
-            is_iterable($uploadedFiles) &&
-            is_string($uploadDir)
+            is_iterable($uploadedFiles)
         ) {
             foreach ($uploadedFiles as $uploadedFile) {
                 if ($uploadedFile instanceof UploadedFile) {
-                    $media = new Media(
-                        originalName: str_replace(
-                            '.' . $uploadedFile->getClientOriginalExtension(),
-                            '',
-                            $uploadedFile->getClientOriginalName(),
-                        ),
-                        extension: $uploadedFile->getClientOriginalExtension(),
-                        type: $uploadedFile->getClientMimeType(),
-                        uploadDir: $uploadDir,
-                        size: $uploadedFile->getSize(),
-                        public: false,
-                        generated: false,
-                    );
+                    $media        = $this->mediaService->createMedia($uploadedFile);
+                    $errorMessage = $this->mediaService->validateMedia($media);
 
-                    $errors = $this->validator->validate($media);
-
-                    if ($errors->count()) {
-                        return $this->json(
-                            ['message' => (string) $errors->get(0)->getMessage()],
-                            Response::HTTP_BAD_REQUEST,
-                        );
+                    if (true !== $errorMessage) {
+                        return $this->json(['message' => $errorMessage], Response::HTTP_BAD_REQUEST);
                     }
 
                     $this->manager->persist($media);
 
-                    try {
-                        $uploadedFile->move($uploadDir, sprintf('%s.%s', $media->id, $media->extension));
-                        $media->uploaded = true;
-                    } catch (FileException $exception) {
-                        $media->uploadError = $exception->getMessage();
-                        $media->uploaded    = false;
-                        $this->manager->flush();
-
-                        return $this->json(['message' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
-                    }
+                    $writtenMedia = $this->mediaService->writeMedia($uploadedFile, $media);
 
                     $this->manager->flush();
+
+                    if (false === $writtenMedia->uploaded) {
+                        return $this->json(
+                            ['message' => $writtenMedia->uploadError],
+                            Response::HTTP_INTERNAL_SERVER_ERROR,
+                        );
+                    }
                 }
             }
 
