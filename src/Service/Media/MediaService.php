@@ -10,7 +10,6 @@ declare(strict_types=1);
  */
 namespace App\Service\Media;
 
-use App\Entity\Basic\Media;
 use App\Service\Media\Transformer\MediaTransformer;
 use App\Service\Media\Validation\MediaValidator;
 use App\Service\Media\Writer\MediaWriter;
@@ -26,17 +25,17 @@ final readonly class MediaService
     ) {
     }
 
-    public function transformMedia(mixed $media): Media
+    public function transformMedia(mixed $media): TransformedMedia
     {
         return $this->mediaTransformer->transform($media);
     }
 
-    public function writeMedia(mixed $notWrittenMedia, Media $createdMedia): Media
+    public function writeMedia(TransformedMedia $transformedMedia): TransformedMedia
     {
-        return $this->mediaWriter->write($notWrittenMedia, $createdMedia);
+        return $this->mediaWriter->write($transformedMedia);
     }
 
-    public function validateMedia(Media $media): string|true
+    public function validateMedia(TransformedMedia $media): string|true
     {
         return $this->mediaValidator->validate($media);
     }
@@ -46,30 +45,30 @@ final readonly class MediaService
         mixed $file,
         bool $flush,
         bool $throwUploadError,
-    ): Media|string {
-        $media        = $this->transformMedia($file);
-        $errorMessage = $this->validateMedia($media);
+    ): string|TransformedMedia {
+        $transformedMedia = $this->transformMedia($file);
+        $errorMessage     = $this->validateMedia($transformedMedia);
 
         if (true !== $errorMessage) {
             return $errorMessage;
         }
 
-        $manager->persist($media);
+        $manager->persist($transformedMedia->media);
 
-        $writtenMedia = $this->writeMedia($file, $media);
+        $transformedMedia = $this->writeMedia($transformedMedia);
 
         if (true === $flush) {
             $manager->flush();
         }
 
-        if (true === $throwUploadError && false === $writtenMedia->uploaded) {
-            if ($writtenMedia->uploadError) {
-                throw new Error($writtenMedia->uploadError);
+        if (true === $throwUploadError && false === $transformedMedia->media->uploaded) {
+            if ($transformedMedia->media->uploadError) {
+                throw new Error($transformedMedia->media->uploadError);
             }
 
             throw new Error('Error handled during upload.');
         }
 
-        return $writtenMedia;
+        return $transformedMedia;
     }
 }

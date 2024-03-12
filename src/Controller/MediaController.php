@@ -14,7 +14,9 @@ use function is_iterable;
 use function sprintf;
 
 use App\Entity\Basic\Media;
+
 use App\Service\Media\MediaService;
+use App\Service\Media\TransformedMedia;
 use App\Service\Media\Transformer\UploadedFileTransformer;
 use App\Service\Media\Validation\DefaultMediaValidator;
 use App\Service\Media\Writer\UploadedFileWriter;
@@ -68,7 +70,7 @@ final class MediaController extends AbstractController
                         true,
                     );
 
-                    if (false === $errorMessage instanceof Media) {
+                    if (false === $errorMessage instanceof TransformedMedia) {
                         return $this->json(['message' => $errorMessage], Response::HTTP_BAD_REQUEST);
                     }
                 }

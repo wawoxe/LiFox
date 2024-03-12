@@ -14,6 +14,8 @@ use function is_string;
 use function str_replace;
 
 use App\Entity\Basic\Media;
+
+use App\Service\Media\TransformedMedia;
 use Error;
 use Override;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -26,7 +28,7 @@ final readonly class UploadedFileTransformer implements MediaTransformer
     }
 
     #[Override]
-    public function transform(mixed $notProcessedMedia): Media
+    public function transform(mixed $notProcessedMedia): TransformedMedia
     {
         if (false === $notProcessedMedia instanceof UploadedFile) {
             throw new Error('Media must be instance of UploadedFile');
@@ -38,18 +40,22 @@ final readonly class UploadedFileTransformer implements MediaTransformer
             throw new Error('media.upload_dir must be string.');
         }
 
-        return new Media(
-            originalName: str_replace(
-                '.' . $notProcessedMedia->getClientOriginalExtension(),
-                '',
-                $notProcessedMedia->getClientOriginalName(),
+        return new TransformedMedia(
+            new Media(
+                originalName: str_replace(
+                    '.' . $notProcessedMedia->getClientOriginalExtension(),
+                    '',
+                    $notProcessedMedia->getClientOriginalName(),
+                ),
+                extension: $notProcessedMedia->getClientOriginalExtension(),
+                type: $notProcessedMedia->getClientMimeType(),
+                uploadDir: $uploadDir,
+                size: $notProcessedMedia->getSize(),
+                public: false,
+                generated: false,
             ),
-            extension: $notProcessedMedia->getClientOriginalExtension(),
-            type: $notProcessedMedia->getClientMimeType(),
-            uploadDir: $uploadDir,
-            size: $notProcessedMedia->getSize(),
-            public: false,
-            generated: false,
+            $notProcessedMedia,
+            $uploadDir,
         );
     }
 }

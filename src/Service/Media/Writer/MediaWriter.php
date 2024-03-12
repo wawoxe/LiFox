@@ -10,9 +10,9 @@ declare(strict_types=1);
  */
 namespace App\Service\Media\Writer;
 
-use App\Entity\Basic\Media;
+use App\Service\Media\TransformedMedia;
 
 interface MediaWriter
 {
-    public function write(mixed $notWrittenMedia, Media $createdMedia): Media;
+    public function write(TransformedMedia $transformedMedia): TransformedMedia;
 }

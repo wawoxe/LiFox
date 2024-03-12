@@ -10,9 +10,9 @@ declare(strict_types=1);
  */
 namespace App\Service\Media\Validation;
 
-use App\Entity\Basic\Media;
+use App\Service\Media\TransformedMedia;
 
 interface MediaValidator
 {
-    public function validate(Media $media): string|true;
+    public function validate(TransformedMedia $transformedMedia): string|true;
 }

@@ -10,7 +10,7 @@ declare(strict_types=1);
  */
 namespace App\Service\Media\Validation;
 
-use App\Entity\Basic\Media;
+use App\Service\Media\TransformedMedia;
 use Override;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -21,9 +21,9 @@ final readonly class DefaultMediaValidator implements MediaValidator
     }
 
     #[Override]
-    public function validate(Media $media): string|true
+    public function validate(TransformedMedia $transformedMedia): string|true
     {
-        $errors = $this->validator->validate($media);
+        $errors = $this->validator->validate($transformedMedia->media);
 
         if ($errors->count()) {
             return (string) $errors->get(0)->getMessage();

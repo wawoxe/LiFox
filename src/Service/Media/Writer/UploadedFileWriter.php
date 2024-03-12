@@ -12,7 +12,8 @@ namespace App\Service\Media\Writer;
 
 use function sprintf;
 
-use App\Entity\Basic\Media;
+use App\Service\Media\TransformedMedia;
+
 use Error;
 use Override;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -21,27 +22,23 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 final readonly class UploadedFileWriter implements MediaWriter
 {
     #[Override]
-    public function write(mixed $notWrittenMedia, Media $createdMedia): Media
+    public function write(TransformedMedia $transformedMedia): TransformedMedia
     {
-        if (false === $notWrittenMedia instanceof UploadedFile) {
+        if (false === $transformedMedia->originalFile instanceof UploadedFile) {
             throw new Error('Media must be instance of UploadedFile');
         }
 
         try {
-            if (null === $createdMedia->uploadDir) {
-                throw new FileException('Upload directory is not found.');
-            }
-
-            $notWrittenMedia->move(
-                $createdMedia->uploadDir,
-                sprintf('%s.%s', $createdMedia->id, $createdMedia->extension),
+            $transformedMedia->originalFile->move(
+                $transformedMedia->uploadDir,
+                sprintf('%s.%s', $transformedMedia->media->id, $transformedMedia->media->extension),
             );
-            $createdMedia->uploaded = true;
+            $transformedMedia->media->uploaded = true;
         } catch (FileException $exception) {
-            $createdMedia->uploadError = $exception->getMessage();
-            $createdMedia->uploaded    = false;
+            $transformedMedia->media->uploadError = $exception->getMessage();
+            $transformedMedia->media->uploaded    = false;
         }
 
-        return $createdMedia;
+        return $transformedMedia;
     }
 }

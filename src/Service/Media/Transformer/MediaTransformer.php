@@ -10,9 +10,9 @@ declare(strict_types=1);
  */
 namespace App\Service\Media\Transformer;
 
-use App\Entity\Basic\Media;
+use App\Service\Media\TransformedMedia;
 
 interface MediaTransformer
 {
-    public function transform(mixed $notProcessedMedia): Media;
+    public function transform(mixed $notProcessedMedia): TransformedMedia;
 }
