@@ -58,30 +58,18 @@ final class MediaController extends AbstractController
 
         $uploadedFiles = $request->files->get('files');
 
-        if (
-            $request->files->count() &&
-            is_iterable($uploadedFiles)
-        ) {
+        if ($request->files->count() && is_iterable($uploadedFiles)) {
             foreach ($uploadedFiles as $uploadedFile) {
                 if ($uploadedFile instanceof UploadedFile) {
-                    $media        = $this->mediaService->createMedia($uploadedFile);
-                    $errorMessage = $this->mediaService->validateMedia($media);
+                    $errorMessage = $this->mediaService->createMedia(
+                        $this->manager,
+                        $uploadedFile,
+                        true,
+                        true,
+                    );
 
-                    if (true !== $errorMessage) {
+                    if (false === $errorMessage instanceof Media) {
                         return $this->json(['message' => $errorMessage], Response::HTTP_BAD_REQUEST);
-                    }
-
-                    $this->manager->persist($media);
-
-                    $writtenMedia = $this->mediaService->writeMedia($uploadedFile, $media);
-
-                    $this->manager->flush();
-
-                    if (false === $writtenMedia->uploaded) {
-                        return $this->json(
-                            ['message' => $writtenMedia->uploadError],
-                            Response::HTTP_INTERNAL_SERVER_ERROR,
-                        );
                     }
                 }
             }

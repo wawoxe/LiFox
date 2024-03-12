@@ -14,6 +14,8 @@ use App\Entity\Basic\Media;
 use App\Service\Media\Transformer\MediaTransformer;
 use App\Service\Media\Validation\MediaValidator;
 use App\Service\Media\Writer\MediaWriter;
+use Doctrine\ORM\EntityManagerInterface;
+use Error;
 
 final readonly class MediaService
 {
@@ -24,7 +26,7 @@ final readonly class MediaService
     ) {
     }
 
-    public function createMedia(mixed $media): Media
+    public function transformMedia(mixed $media): Media
     {
         return $this->mediaTransformer->transform($media);
     }
@@ -37,5 +39,37 @@ final readonly class MediaService
     public function validateMedia(Media $media): string|true
     {
         return $this->mediaValidator->validate($media);
+    }
+
+    public function createMedia(
+        EntityManagerInterface $manager,
+        mixed $file,
+        bool $flush,
+        bool $throwUploadError,
+    ): Media|string {
+        $media        = $this->transformMedia($file);
+        $errorMessage = $this->validateMedia($media);
+
+        if (true !== $errorMessage) {
+            return $errorMessage;
+        }
+
+        $manager->persist($media);
+
+        $writtenMedia = $this->writeMedia($file, $media);
+
+        if (true === $flush) {
+            $manager->flush();
+        }
+
+        if (true === $throwUploadError && false === $writtenMedia->uploaded) {
+            if ($writtenMedia->uploadError) {
+                throw new Error($writtenMedia->uploadError);
+            }
+
+            throw new Error('Error handled during upload.');
+        }
+
+        return $writtenMedia;
     }
 }
