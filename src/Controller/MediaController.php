@@ -115,13 +115,11 @@ final class MediaController extends AbstractController
     )]
     public function getFile(string $id): Response
     {
+        $this->denyAccessUnlessGranted($this->parameterBag->get('media.get.allowed_role'));
+
         $media = $this->manager->getRepository(Media::class)->findOneBy(['id' => $id]);
 
         if ($media instanceof Media) {
-            if (false === $media->public && false === $this->isGranted('IS_AUTHENTICATED_FULLY')) {
-                return $this->json(['message' => 'response.media.forbidden'], Response::HTTP_FORBIDDEN);
-            }
-
             return $this->file(
                 sprintf(
                     '%s%s.%s',

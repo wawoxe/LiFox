@@ -1,3 +1,4 @@
 parameters:
   media.upload_dir: '%kernel.project_dir%/media/'
   media.create.allowed_role: 'IS_AUTHENTICATED_FULLY'
+  media.get.allowed_role: 'IS_AUTHENTICATED_FULLY'
