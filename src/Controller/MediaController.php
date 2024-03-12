@@ -53,7 +53,6 @@ final class MediaController extends AbstractController
         name: 'create',
         methods: [Request::METHOD_POST],
     )]
-    #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function create(Request $request): Response
     {
         $this->denyAccessUnlessGranted($this->parameterBag->get('media.create.allowed_role'));
