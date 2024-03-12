@@ -50,8 +50,10 @@ final class MediaController extends AbstractController
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function create(Request $request): Response
     {
+        $this->denyAccessUnlessGranted($this->parameterBag->get('media.create.allowed_role'));
+
         $uploadedFiles = $request->files->get('files');
-        $uploadDir     = $this->parameterBag->get('app.upload_dir');
+        $uploadDir     = $this->parameterBag->get('media.upload_dir');
 
         if (
             $request->files->count() &&
