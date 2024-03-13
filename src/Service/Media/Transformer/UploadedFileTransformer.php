@@ -14,9 +14,11 @@ use function is_string;
 use function str_replace;
 
 use App\Entity\Basic\Media;
+use App\Service\Media\Exception\UploadDirectoryException;
+
+use App\Service\Media\Exception\UploadedFileException;
 
 use App\Service\Media\TransformedMedia;
-use Error;
 use Override;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -27,17 +29,21 @@ final readonly class UploadedFileTransformer implements MediaTransformer
     {
     }
 
+    /**
+     * @throws UploadDirectoryException
+     * @throws UploadedFileException
+     */
     #[Override]
     public function transform(mixed $notProcessedMedia): TransformedMedia
     {
         if (false === $notProcessedMedia instanceof UploadedFile) {
-            throw new Error('Media must be instance of UploadedFile');
+            throw new UploadedFileException;
         }
 
         $uploadDir = $this->parameterBag->get('media.upload_dir');
 
         if (false === is_string($uploadDir)) {
-            throw new Error('media.upload_dir must be string.');
+            throw new UploadDirectoryException;
         }
 
         return new TransformedMedia(

@@ -12,20 +12,24 @@ namespace App\Service\Media\Writer;
 
 use function sprintf;
 
+use App\Service\Media\Exception\UploadedFileException;
+
 use App\Service\Media\TransformedMedia;
 
-use Error;
 use Override;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 final readonly class UploadedFileWriter implements MediaWriter
 {
+    /**
+     * @throws UploadedFileException
+     */
     #[Override]
     public function write(TransformedMedia $transformedMedia): TransformedMedia
     {
         if (false === $transformedMedia->originalFile instanceof UploadedFile) {
-            throw new Error('Media must be instance of UploadedFile');
+            throw new UploadedFileException;
         }
 
         try {

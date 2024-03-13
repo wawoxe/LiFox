@@ -14,6 +14,9 @@ use function is_iterable;
 use function sprintf;
 
 use App\Entity\Basic\Media;
+
+use App\Service\Media\Exception\NotUploadedException;
+
 use App\Service\Media\MediaService;
 use App\Service\Media\TransformedMedia;
 use App\Service\Media\Transformer\UploadedFileTransformer;
@@ -22,7 +25,6 @@ use App\Service\Media\Writer\UploadedFileWriter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -61,17 +63,15 @@ final class MediaController extends AbstractController
 
         if ($request->files->count() && is_iterable($uploadedFiles)) {
             foreach ($uploadedFiles as $uploadedFile) {
-                if ($uploadedFile instanceof UploadedFile) {
-                    $errorMessage = $this->mediaService->createMedia(
-                        $this->manager,
-                        $uploadedFile,
-                        true,
-                        true,
-                    );
+                $errorMessage = $this->mediaService->createMedia(
+                    $this->manager,
+                    $uploadedFile,
+                    true,
+                    true,
+                );
 
-                    if (false === $errorMessage instanceof TransformedMedia) {
-                        return $this->json(['message' => $errorMessage], Response::HTTP_BAD_REQUEST);
-                    }
+                if (false === $errorMessage instanceof TransformedMedia) {
+                    return $this->json(['message' => $errorMessage], Response::HTTP_BAD_REQUEST);
                 }
             }
 
@@ -81,6 +81,9 @@ final class MediaController extends AbstractController
         return $this->json(['message' => 'response.media.empty'], Response::HTTP_BAD_REQUEST);
     }
 
+    /**
+     * @throws NotUploadedException
+     */
     #[Route(
         path: '/file/{id}',
         name: 'get_file',
@@ -93,6 +96,10 @@ final class MediaController extends AbstractController
         $media = $this->manager->getRepository(Media::class)->findOneBy(['id' => $id]);
 
         if ($media instanceof Media) {
+            if (true !== $media->uploaded) {
+                throw new NotUploadedException;
+            }
+
             return $this->file(
                 sprintf(
                     '%s%s.%s',
