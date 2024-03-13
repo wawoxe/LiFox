@@ -14,7 +14,7 @@ use App\Service\Media\Transformer\MediaTransformer;
 use App\Service\Media\Validation\MediaValidator;
 use App\Service\Media\Writer\MediaWriter;
 use Doctrine\ORM\EntityManagerInterface;
-use Error;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 final readonly class MediaService
 {
@@ -63,10 +63,10 @@ final readonly class MediaService
 
         if (true === $throwUploadError && false === $transformedMedia->media->uploaded) {
             if ($transformedMedia->media->uploadError) {
-                throw new Error($transformedMedia->media->uploadError);
+                throw new FileException($transformedMedia->media->uploadError);
             }
 
-            throw new Error('Error handled during upload.');
+            throw new FileException('Error handled during upload.');
         }
 
         return $transformedMedia;
