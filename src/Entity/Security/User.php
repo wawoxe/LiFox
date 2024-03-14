@@ -35,10 +35,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 class User implements PasswordAuthenticatedUserInterface, UserInterface
 {
     /**
-     * @param null|Uuid          $id       the unique database ID based on UUID
-     * @param null|string        $email    the email address (identifier)
-     * @param array<int, string> $roles    the roles assigned to the user
-     * @param null|string        $password the hashed password
+     * @param null|Uuid          $id            the unique database ID based on UUID
+     * @param null|string        $email         the email address (identifier)
+     * @param array<int, string> $roles         the roles assigned to the user
+     * @param null|string        $password      the hashed password
+     * @param null|string        $plainPassword the plain password
      */
     public function __construct(
         #[
@@ -56,15 +57,19 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
         public ?string $email = null,
         #[ORM\Column]
         public array $roles = [],
+        #[ORM\Column]
+        public ?string $password = null,
         #[
-            ORM\Column,
-            Assert\NotBlank(message: 'validation.user.password.blank'),
+            Assert\When(
+                expression: 'this.password === null',
+                constraints: [new Assert\NotBlank(message: 'validation.user.plainPassword.blank')],
+            ),
             Assert\Regex(
                 pattern: '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,80}$/',
-                message: 'validation.user.password.regex',
-            ),
+                message: 'validation.user.plainPassword.regex',
+            )
         ]
-        public ?string $password = null,
+        public ?string $plainPassword = null,
     ) {
     }
 
@@ -111,5 +116,6 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
      */
     public function eraseCredentials(): void
     {
+        $this->plainPassword = null;
     }
 }

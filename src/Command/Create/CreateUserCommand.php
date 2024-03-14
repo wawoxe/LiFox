@@ -53,10 +53,8 @@ final class CreateUserCommand extends Command
         if (is_string($email) && is_string($password)) {
             $superAdminEntity = new User(
                 email: $email,
-                roles: ['ROLE_USER'],
+                plainPassword: $password,
             );
-
-            $superAdminEntity->password = $password;
 
             $errors = $this->validator->validate($superAdminEntity);
 
@@ -66,6 +64,7 @@ final class CreateUserCommand extends Command
                 return Command::FAILURE;
             }
 
+            $superAdminEntity->eraseCredentials();
             $superAdminEntity->password = $this->passwordHasher->hashPassword($superAdminEntity, $password);
 
             $this->manager->persist($superAdminEntity);
